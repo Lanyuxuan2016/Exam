@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 主题 -->
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 开发模式 -->
+	<constant name="struts.devMode" value="true" />
+	
+	<package name="surveyparkPkg" extends="struts-default,jfreechart-default" namespace="/">
+		<interceptors>
+			<!-- 注册登陆拦截器 -->
+			<interceptor name="rightFilterInterceptor" class="com.atguigu.surveypark.struts2.interceptor.RightFilterInterceptor" />
+			<!-- 捕获url拦截器 -->
+			<interceptor name="catchUrlInterceptor" class="com.atguigu.surveypark.struts2.interceptor.CatchUrlInterceptor" />
+			<!-- 定义拦截器栈 -->
+			<interceptor-stack name="surveyparkStack">
+				<interceptor-ref name="catchUrlInterceptor" />
+				<interceptor-ref name="rightFilterInterceptor" />
+				<interceptor-ref name="defaultStack">
+					<param name="modelDriven.refreshModelBeforeResult">true</param>
+					<!-- 文件大小 -->
+					<param name="fileUpload.maximumSize">60000</param>
+					<!-- 文件扩展名 -->
+					<param name="fileUpload.allowedExtensions">.jpg,.jpeg,.png,.bmp,.gif</param>
+					<!-- 文件内容类型 -->
+					<param name="fileUpload.allowedTypes">image/jpg,image/jpeg,image/pjpeg,image/png,image/gif,image/bmp</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<!-- 定义默认栈 -->
+		<default-interceptor-ref name="surveyparkStack" />
+		
+		<!-- 定义全局结果 -->
+		<global-results>
+			<result name="login">/index.jsp</result>
+			<result name="error_no_right">/index.jsp</result>
+			<result name="designSurveyAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">SurveyAction_designSurvey</param>
+				<param name="sid">${sid}</param>
+			</result>			
+		</global-results>
+		
+		<!-- regAction -->
+		<action name="RegAction_*" class="regAction" method="{1}">
+			<result name="regPage">/reg.jsp</result>
+			<result name="input">/reg.jsp</result>
+			<result name="success">/index.jsp</result>
+		</action>
+		<!-- loginAction -->
+		<action name="LoginAction_*" class="loginAction" method="{1}">
+			<result name="loginPage">/index.jsp</result>
+			<result name="input">/index.jsp</result>
+			<result name="success">/index.jsp</result>
+		</action>
+		
+		
+		<!-- RightAction -->
+		<action name="RightAction_*" class="rightAction" method="{1}">
+			<result name="rightListPage">/rightList.jsp</result>
+			<result name="addRightPage">/editRight.jsp</result>
+			<result name="editRightPage">/editRight.jsp</result>
+			<result name="findAllRightAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">RightAction_findAllRights</param>
+			</result>
+		</action>
+		
+		<!-- RoleAction -->
+		<action name="RoleAction_*" class="roleAction" method="{1}">
+			<result name="roleListPage">/roleList.jsp</result>
+			<result name="addRolePage">/editRole.jsp</result>
+			<result name="editRolePage">/editRole.jsp</result>
+			<result name="findAllRolesAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">RoleAction_findAllRoles</param>
+			</result>
+		</action>
+		
+		<!-- UserAuthorizeAction -->
+		<action name="UserAuthorizeAction_*" class="userAuthorizeAction" method="{1}">
+			<result name="userAuthorizeListPage">/userAuthorizeList.jsp</result>
+			<result name="userAuthorizePage">/userAuthorize.jsp</result>
+			<result name="findAllUsersAction" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">UserAuthorizeAction_findAllUsers</param>
+			</result>
+		</action>
+	</package>
+</struts>
